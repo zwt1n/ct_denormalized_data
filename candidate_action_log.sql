@@ -233,6 +233,8 @@ UNION ALL
     , NULL as ps_reply_date
   from  
     cp
+  where
+    cp.ins_datetime >= date_trunc('month',add_months(trunc(convert_timezone('JST', getdate())),-13))
       
 UNION ALL
 
