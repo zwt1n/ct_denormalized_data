@@ -250,8 +250,8 @@ UNION ALL
     , NULL as message_thread_id
     , NULL as ps_reply_date
   from
-    cp
-    inner join candidate_progress_log cpl on cp.candidate_progress_id = cpl.candidate_progress_id 
+    candidate_progress_log cpl
+    left join cp on cp.candidate_progress_id = cpl.candidate_progress_id 
   where
     cpl.DEL_FLG = 'N'
     and cpl.CANDIDATE_PROGRESS_STATUS_CD in('ITV__', 'MTADJ') -- CRS:書類OK / ESS:面談調整中
@@ -273,8 +273,8 @@ UNION ALL
     , NULL as message_thread_id
     , NULL as ps_reply_date    
   from
-    cp
-    inner join candidate_progress_log cpl on cp.candidate_progress_id = cpl.candidate_progress_id 
+    candidate_progress_log cpl
+    left join cp on cp.candidate_progress_id = cpl.candidate_progress_id 
   where
     cpl.DEL_FLG = 'N'
     and cpl.CANDIDATE_PROGRESS_STATUS_CD = 'OFFER' -- 内定
@@ -296,7 +296,7 @@ UNION ALL
     , NULL as ps_reply_date
   from
     candidate_replace cr
-    inner join cp on cr.candidate_progress_id = cp.candidate_progress_id
+    left join cp on cr.candidate_progress_id = cp.candidate_progress_id
   where
     cr.ins_datetime >= date_trunc('month',add_months(trunc(convert_timezone('JST', getdate())),-13))
     -- 「入社前辞退」を除外
