@@ -47,9 +47,8 @@ with cp as (
           and mt.create_trigger_type_cd = 'PSC'
        )m on cpmi.message_thread_id = m.message_thread_id
   where
-    cp.ins_datetime >= date_trunc('month',add_months(trunc(convert_timezone('JST', getdate())),-13))
     -- ビズリーチ除外
-    and cp.recruiter_company_id <> 1  
+    cp.recruiter_company_id <> 1  
 
 ),
 
@@ -250,8 +249,8 @@ UNION ALL
     , NULL as message_thread_id
     , NULL as ps_reply_date
   from
-    candidate_progress_log cpl
-    left join cp on cp.candidate_progress_id = cpl.candidate_progress_id 
+    cp 
+    inner join candidate_progress_log cpl on cp.candidate_progress_id = cpl.candidate_progress_id 
   where
     cpl.DEL_FLG = 'N'
     and cpl.CANDIDATE_PROGRESS_STATUS_CD in('ITV__', 'MTADJ') -- CRS:書類OK / ESS:面談調整中
@@ -273,8 +272,8 @@ UNION ALL
     , NULL as message_thread_id
     , NULL as ps_reply_date    
   from
-    candidate_progress_log cpl
-    left join cp on cp.candidate_progress_id = cpl.candidate_progress_id 
+    cp
+    inner join candidate_progress_log cpl on cp.candidate_progress_id = cpl.candidate_progress_id 
   where
     cpl.DEL_FLG = 'N'
     and cpl.CANDIDATE_PROGRESS_STATUS_CD = 'OFFER' -- 内定
@@ -286,7 +285,7 @@ UNION ALL
   -- 7_決定
   ------------------------------
   select
-      cp.candidate_id
+      cr.candidate_id
     , cr.ins_datetime as act_date -- 決定が出た日
     , '7_決定' as act_type
     , cp.route_info
@@ -296,7 +295,7 @@ UNION ALL
     , NULL as ps_reply_date
   from
     candidate_replace cr
-    left join cp on cr.candidate_progress_id = cp.candidate_progress_id
+    inner join cp on cr.candidate_progress_id = cp.candidate_progress_id
   where
     cr.ins_datetime >= date_trunc('month',add_months(trunc(convert_timezone('JST', getdate())),-13))
     -- 「入社前辞退」を除外
@@ -323,15 +322,14 @@ UNION ALL
     , NULL as recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
-	FROM
-		candidate c
-	WHERE
-	  c.candidate_status_cd = 'LFT'
-		and c.ins_datetime >= date_trunc('month',add_months(trunc(convert_timezone('JST', getdate())),-13))
+  FROM
+    candidate c
+  WHERE
+    c.candidate_status_cd = 'LFT'
+    and c.upd_datetime >= date_trunc('month',add_months(trunc(convert_timezone('JST', getdate())),-13))
 )
 
 select
   *
 from
   tran
-;
