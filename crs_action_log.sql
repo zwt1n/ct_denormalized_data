@@ -179,8 +179,6 @@ tran as (
     ,Null::bigint as job_id
     ,Null as route_info
     ,Null::bigint as replace_income
-    ,b_contract_prd_cd
-    ,b_contract_prd
   from
     cal
     left join con on (con.b_contract_start_date <= cal.cal_date and cal.cal_date < con.b_contract_end_date +1)
@@ -201,8 +199,6 @@ union all
     ,j.job_id
     ,Null as route_info
     ,Null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     job j
     inner join(
@@ -236,8 +232,6 @@ union all
     ,j.job_id
     ,Null as route_info
     ,Null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     job_segment_info jsi
     inner join job j on j.job_id = jsi.job_id
@@ -262,8 +256,6 @@ union all
     ,Null::bigint as job_id
     ,Null as route_info
     ,Null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     recruiter_login_log rll
     inner join recruiter r on r.recruiter_id = rll.recruiter_id
@@ -287,8 +279,6 @@ union all
     ,mt.attached_job_id as job_id 
     ,mt.scout_s_class as route_info
     ,Null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from message_thread mt
        inner join message m
        on mt.message_thread_id = m.message_thread_id
@@ -312,8 +302,6 @@ union all
     ,f.job_id
     ,Null as route_info
     ,Null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     footprint f
     inner join job j on f.job_id = j.job_id
@@ -335,8 +323,6 @@ union all
     ,rcd.job_id
     ,Null as route_info
     ,Null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     recruiter_correspond_data rcd
     inner join recruiter_company rc on rcd.recruiter_company_id = rc.recruiter_company_id
@@ -358,8 +344,6 @@ union all
     ,cp.job_id
     ,cp.route_info
     ,null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     cp
   where
@@ -379,8 +363,6 @@ union all
     ,cp.job_id
     ,cp.route_info
     ,null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     cp
     inner join candidate_progress_log cpl
@@ -405,8 +387,6 @@ union all
     ,cp.job_id
     ,cp.route_info
     ,null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     cp
   where
@@ -428,8 +408,6 @@ union all
     ,cp.job_id
     ,cp.route_info
     ,null::bigint as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     cp
     inner join candidate_progress_log cpl
@@ -452,8 +430,6 @@ union all
     ,cp.job_id
     ,cp.route_info
     ,cr.income as replace_income
-    ,Null as b_contract_prd_cd
-    ,Null as b_contract_prd
   from
     CANDIDATE_REPLACE cr
     inner join cp on cr.CANDIDATE_PROGRESS_ID = cp.CANDIDATE_PROGRESS_ID
@@ -483,8 +459,6 @@ select
   ,tran.job_id
   ,tran.route_info
   ,tran.replace_income
-  ,tran.b_contract_prd_cd
-  ,tran.b_contract_prd
   ,con2.b_contract_id
   ,con2.b_company_name
   ,con2.b_company_type
