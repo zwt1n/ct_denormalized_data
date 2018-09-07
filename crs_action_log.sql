@@ -181,8 +181,6 @@ tran as (
     ,Null::bigint as replace_income
     ,b_contract_prd_cd
     ,b_contract_prd
-    ,b_contract_start_date
-    ,b_contract_end_date    
   from
     cal
     left join con on (con.b_contract_start_date <= cal.cal_date and cal.cal_date < con.b_contract_end_date +1)
@@ -205,8 +203,6 @@ union all
     ,Null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     job j
     inner join(
@@ -242,8 +238,6 @@ union all
     ,Null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     job_segment_info jsi
     inner join job j on j.job_id = jsi.job_id
@@ -270,8 +264,6 @@ union all
     ,Null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     recruiter_login_log rll
     inner join recruiter r on r.recruiter_id = rll.recruiter_id
@@ -297,8 +289,6 @@ union all
     ,Null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from message_thread mt
        inner join message m
        on mt.message_thread_id = m.message_thread_id
@@ -324,8 +314,6 @@ union all
     ,Null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     footprint f
     inner join job j on f.job_id = j.job_id
@@ -349,8 +337,6 @@ union all
     ,Null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     recruiter_correspond_data rcd
     inner join recruiter_company rc on rcd.recruiter_company_id = rc.recruiter_company_id
@@ -374,8 +360,6 @@ union all
     ,null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     cp
   where
@@ -397,8 +381,6 @@ union all
     ,null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     cp
     inner join candidate_progress_log cpl
@@ -425,8 +407,6 @@ union all
     ,null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     cp
   where
@@ -450,8 +430,6 @@ union all
     ,null::bigint as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     cp
     inner join candidate_progress_log cpl
@@ -476,8 +454,6 @@ union all
     ,cr.income as replace_income
     ,Null as b_contract_prd_cd
     ,Null as b_contract_prd
-    ,Null::date as b_contract_start_date
-    ,Null::date as b_contract_end_date    
   from
     CANDIDATE_REPLACE cr
     inner join cp on cr.CANDIDATE_PROGRESS_ID = cp.CANDIDATE_PROGRESS_ID
@@ -509,8 +485,6 @@ select
   ,tran.replace_income
   ,tran.b_contract_prd_cd
   ,tran.b_contract_prd
-  ,tran.b_contract_start_date
-  ,tran.b_contract_end_date
   ,con2.b_contract_id
   ,con2.b_company_name
   ,con2.b_company_type
