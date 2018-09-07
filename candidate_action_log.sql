@@ -66,7 +66,8 @@ tran as (
     , NULL as recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
-	FROM
+    , row_number()over(partition by to_char(c.ins_datetime,'yyyy-mm'),c.candidate_id order by c.ins_datetime) as act_no_per_month
+ 	FROM
 		candidate c
 		left join candidate_personal_info cpi on c.candidate_id = cpi.candidate_id
 	WHERE
@@ -86,6 +87,7 @@ UNION ALL
     , NULL as recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
+    , row_number()over(partition by to_char(act_date,'yyyy-mm'),candidate_id order by act_date) as act_no_per_month
   from
     (
       select distinct
@@ -132,6 +134,8 @@ UNION ALL
     , recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
+     -- 月次のユニーク累積用
+    , row_number()over(partition by to_char(act_date,'yyyy-mm'),candidate_id order by act_date) as act_no_per_month
   from
     (
       select distinct
@@ -163,6 +167,8 @@ UNION ALL
     , recruiter_company_id
     , message_thread_id
     , to_date(date_trunc('day',reply_tm),'YYYY-MM-DD') as ps_reply_date
+    -- 月次のユニーク累積用
+    , row_number()over(partition by to_char(act_date,'yyyy-mm'),candidate_id order by act_date) as act_no_per_month
   from
     (
     select distinct
@@ -233,6 +239,8 @@ UNION ALL
     , cp.recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
+     -- 月次のユニーク累積用
+    , row_number()over(partition by to_char(cp.ins_datetime,'yyyy-mm'),cp.candidate_id order by cp.ins_datetime) as act_no_per_month
   from  
     cp
   where
@@ -252,6 +260,8 @@ UNION ALL
     , cp.recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
+    -- 月次のユニーク累積用
+    , row_number()over(partition by to_char(cpl.ins_datetime,'yyyy-mm'),cp.candidate_id order by cpl.ins_datetime) as act_no_per_month
   from
     cp 
     inner join candidate_progress_log cpl on cp.candidate_progress_id = cpl.candidate_progress_id 
@@ -274,7 +284,9 @@ UNION ALL
     , cp.job_id
     , cp.recruiter_company_id
     , NULL as message_thread_id
-    , NULL as ps_reply_date    
+    , NULL as ps_reply_date
+    -- 月次のユニーク累積用    
+    , row_number()over(partition by to_char(cpl.ins_datetime,'yyyy-mm'),cp.candidate_id order by cpl.ins_datetime) as act_no_per_month
   from
     cp
     inner join candidate_progress_log cpl on cp.candidate_progress_id = cpl.candidate_progress_id 
@@ -297,6 +309,8 @@ UNION ALL
     , cp.recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
+    -- 月次のユニーク累積用
+    , row_number()over(partition by to_char(cr.ins_datetime,'yyyy-mm'),cr.candidate_id order by cr.ins_datetime) as act_no_per_month    
   from
     candidate_replace cr
     inner join cp on cr.candidate_progress_id = cp.candidate_progress_id
@@ -326,6 +340,8 @@ UNION ALL
     , NULL as recruiter_company_id
     , NULL as message_thread_id
     , NULL as ps_reply_date
+    -- 月次のユニーク累積用
+    , row_number()over(partition by to_char(c.upd_datetime,'yyyy-mm'),c.candidate_id order by c.upd_datetime) as act_no_per_month
   FROM
     candidate c
   WHERE
@@ -459,6 +475,7 @@ select
   ,tran.recruiter_company_id
   ,tran.message_thread_id -- スカウト通数カウント用
   ,tran.ps_reply_date
+  ,tran.act_no_per_month -- 月次のユニーク累積集計用
   ,c2.c_reg_datetime
   ,c2.c_gender_cd
   ,c2.c_age
